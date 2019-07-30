@@ -164,6 +164,10 @@ public class PlaceContentProvider extends ContentProvider {
                 // Use selections/selectionArgs to filter for this ID
                 placesDeleted = db.delete(PlaceEntry.TABLE_NAME, "_id=?", new String[]{id});
                 break;
+            case PLACES:
+                // Insert new values into the database
+                placesDeleted = db.delete(PlaceEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

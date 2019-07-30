@@ -1,39 +1,46 @@
 package com.example.android.shushme;
 
 /*
-* Copyright (C) 2017 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*  	http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.libraries.places.api.model.Place;
+
+import java.util.List;
+
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.PlaceViewHolder> {
 
     private Context mContext;
+    private List<Place> mPlaces;
 
     /**
      * Constructor using the context and the db cursor
      *
      * @param context the calling context/activity
      */
-    public PlaceListAdapter(Context context) {
+    public PlaceListAdapter(Context context, List<Place> places) {
         this.mContext = context;
+        this.mPlaces = places;
     }
 
     /**
@@ -59,9 +66,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      */
     @Override
     public void onBindViewHolder(PlaceViewHolder holder, int position) {
-
+        holder.bind(position);
     }
-
 
     /**
      * Returns the number of items in the cursor
@@ -70,7 +76,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      */
     @Override
     public int getItemCount() {
-        return 0;
+        if (mPlaces == null) return 0;
+        return mPlaces.size();
     }
 
     /**
@@ -87,5 +94,22 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
             addressTextView = (TextView) itemView.findViewById(R.id.address_text_view);
         }
 
+        public void bind(int position) {
+            nameTextView.setText(mPlaces.get(getAdapterPosition()).getName());
+            addressTextView.setText(mPlaces.get(getAdapterPosition()).getAddress());
+        }
     }
+
+
+    public void updatePlaces(List<Place> places) {
+        if (places != null && places.size() > 0) {
+            mPlaces = places;
+            this.notifyDataSetChanged();
+        }
+    }
+
+    public List<Place> getPlaces() {
+        return mPlaces;
+    }
+
 }
